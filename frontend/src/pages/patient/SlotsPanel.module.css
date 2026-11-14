@@ -1,0 +1,18 @@
+.spaceFilter {
+  margin-bottom: 16px;
+}
+
+.selectDoctor {
+  min-width: 220px;
+}
+
+.modalParagraph {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modalFooterSpace {
+  width: 100%;
+  justify-content: flex-end;
+}

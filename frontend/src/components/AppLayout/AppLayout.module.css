@@ -1,0 +1,36 @@
+.layout {
+  min-height: 100vh;
+}
+
+.header {
+  background: #ffffff;
+  padding: 12px 16px;
+  height: auto;
+  line-height: normal;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  border-bottom: 1px solid #d7ebe7;
+}
+
+.brandIcon {
+  font-size: 22px;
+  color: #0f766e;
+}
+
+.content {
+  padding: 16px;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+@media (max-width: 640px) {
+  .hideMobile {
+    display: none;
+  }
+}

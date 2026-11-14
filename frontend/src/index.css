@@ -1,0 +1,16 @@
+body {
+  margin: 0;
+  background: #f4f9f8;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Hide email text on small phones, show it on tablets and up */
+.hide-mobile {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .hide-mobile {
+    display: inline;
+  }
+}
