@@ -37,8 +37,8 @@ export default function SignUpPage() {
       toast.error(error.message);
       return;
     }
-
-    toast.success("Account created! Please check your email to confirm your address before signing in.", {
+    await supabase.auth.signOut();
+    toast.success("Account created!", {
       duration: 6000,
     });
     navigate("/login");
