@@ -1,58 +1,47 @@
 import { useState } from "react";
-import { Button, Card, Form, Input, Typography } from "antd";
+import { Button, Card, Form, Input, Select, Typography } from "antd";
 import {
   LockOutlined,
   MailOutlined,
   MedicineBoxOutlined,
 } from "@ant-design/icons";
-import { Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { supabase } from "../lib/supabase";
-import { getRole, homePath, useAuth } from "../context/AuthContext";
-import styles from "./LoginPage.module.css";
+import styles from "./SignUpPage.module.css";
+import { supabase } from "../../../lib/supabase";
 
-const KNOWN_ROLES = ["admin", "patient"];
-
-interface LoginFormValues {
+interface SignUpFormValues {
   email: string;
   password: string;
+  role: "admin" | "patient";
 }
 
-export default function LoginPage() {
-  const { user, role, loading } = useAuth();
+export default function SignUpPage() {
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const navigate = useNavigate();
 
-  // Already logged in with a valid role: skip the form
-  if (!loading && user && KNOWN_ROLES.includes(role)) {
-    return <Navigate to={homePath(role)} replace />;
-  }
-
-  async function handleLogin(values: LoginFormValues): Promise<void> {
+  async function handleSignUp(values: SignUpFormValues): Promise<void> {
     setSubmitting(true);
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signUp({
       email: values.email.trim().toLowerCase(),
       password: values.password,
+      options: {
+        data: {
+          role: values.role,
+        },
+      },
     });
     setSubmitting(false);
 
     if (error) {
-      toast.error(
-        error.message === "Invalid login credentials"
-          ? "Wrong email or password."
-          : error.message,
-      );
+      toast.error(error.message);
       return;
     }
 
-    // Account exists but has no valid role
-    if (!KNOWN_ROLES.includes(getRole(data.user))) {
-      await supabase.auth.signOut();
-      toast.error("This account has no valid role. Ask the admin to fix it.");
-      return;
-    }
-
-    toast.success("Welcome back!");
-    // The Navigate above sends the user to their page when the session updates.
+    toast.success("Account created! Please check your email to confirm your address before signing in.", {
+      duration: 6000,
+    });
+    navigate("/login");
   }
 
   return (
@@ -64,14 +53,15 @@ export default function LoginPage() {
             Koya Clinic
           </Typography.Title>
           <Typography.Text type='secondary'>
-            Sign in to book or manage appointments
+            Create an account to get started
           </Typography.Text>
         </div>
 
-        <Form<LoginFormValues>
+        <Form<SignUpFormValues>
           layout='vertical'
-          onFinish={handleLogin}
-          requiredMark={false}>
+          onFinish={handleSignUp}
+          requiredMark={false}
+          initialValues={{ role: "patient" }}>
           <Form.Item
             name='email'
             label='Email'
@@ -103,15 +93,35 @@ export default function LoginPage() {
             />
           </Form.Item>
 
+          <Form.Item
+            name='role'
+            label='Role'
+            rules={[{ required: true, message: "Please select a role" }]}>
+            <Select
+              size='large'
+              placeholder='Select your role'
+              options={[
+                { value: "patient", label: "Patient" },
+                { value: "admin", label: "Admin" },
+              ]}
+            />
+          </Form.Item>
+
           <Button
             type='primary'
             htmlType='submit'
             size='large'
             block
             loading={submitting}>
-            Sign in
+            Sign up
           </Button>
         </Form>
+
+        <div className={styles.footer}>
+          <Typography.Text type='secondary'>
+            Already have an account? <Link to='/login'>Sign in</Link>
+          </Typography.Text>
+        </div>
       </Card>
     </div>
   );

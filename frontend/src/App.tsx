@@ -3,10 +3,11 @@ import { ConfigProvider } from "antd";
 import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
-import LoginPage from "./pages/LoginPage";
 import PatientPage from "./pages/PatientPage";
 import AppLayout from "./components/AppLayout/AppLayout";
 import AdminPage from "./pages/AdminPage/AdminPage";
+import LoginPage from "./pages/Auth/LoginPage/LoginPage";
+import SignUpPage from "./pages/Auth/SignUpPage/SignUpPage";
 
 
 export default function App() {
@@ -24,6 +25,7 @@ export default function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignUpPage />} />
 
             <Route element={<AppLayout />}>
               <Route
